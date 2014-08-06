@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modules>
+		<module>../wdxxl-pp</module>
+		<module>../wdxxl-qm</module>
+		<module>../wdxxl-web</module>
+		<module>../wdxxl-zUnitTest</module>
+	</modules>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>wdxxl-parentId</groupId>
+	<artifactId>wdxxl-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<springframework-version>3.2.5.RELEASE</springframework-version>
+	</properties>
+	<dependencies>
+		<!-- Spring (webmvc/beans/context/aop/core/expression/web/aopalliance) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${springframework-version}</version>
+		</dependency>
+		<!-- Hessian (hessian) -->
+		<dependency>
+			<groupId>com.caucho</groupId>
+			<artifactId>hessian</artifactId>
+			<version>4.0.7</version>
+		</dependency>
+	</dependencies>
+</project>
