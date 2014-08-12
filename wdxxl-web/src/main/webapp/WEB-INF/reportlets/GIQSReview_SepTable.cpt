@@ -74,6 +74,7 @@ order by ic2code asc,categoryNAme asc
 	RC.categoryNAme,
 	s.score ,
 	ic1.CATEGORYNAME as IC1Name,
+	ic1.SCOREFLAG as IC1ScoreFlag,
 	ic2.CATEGORYNAME as IC2Name,
 	ic2.CATEGORYCode as IC2Code,
 	(select count(*) from giqs_reviewItem where reviewId = ${reviewid}
@@ -117,6 +118,7 @@ order by ic2code asc, categoryname asc, score desc]]></Query>
 <![CDATA[select '分数区分问题数',
 	s.score ,
 	ic1.CATEGORYNAME as IC1Name,
+	ic1.SCOREFLAG as IC1ScoreFlag,
 	ic2.CATEGORYNAME as IC2Name,
 	ic2.CATEGORYCode as IC2Code,
 	(select count(*) from giqs_reviewItem where reviewId = ${reviewid}
@@ -518,23 +520,7 @@ from CXMES.GIQS_REVIEW where sitecode = '${sitecode}' and id= ${reviewid}]]></Qu
 <PrivilegeControl/>
 <Expand/>
 </C>
-<C c="7" r="0" s="1">
-<PrivilegeControl/>
-<Expand/>
-</C>
-<C c="8" r="0" s="2">
-<PrivilegeControl/>
-<Expand/>
-</C>
-<C c="9" r="0" s="2">
-<PrivilegeControl/>
-<Expand/>
-</C>
-<C c="10" r="0" s="2">
-<PrivilegeControl/>
-<Expand/>
-</C>
-<C c="11" r="0" s="1">
+<C c="7" r="0" cs="5" s="1">
 <PrivilegeControl/>
 <Expand/>
 </C>
@@ -597,13 +583,20 @@ from CXMES.GIQS_REVIEW where sitecode = '${sitecode}' and id= ${reviewid}]]></Qu
 <C c="3" r="2" s="1">
 <O t="DSColumn">
 <Attributes dsName="CrossTab_IC_RC_S_(IQS)" columnName="SCORE"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
 <Complex/>
 <RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Result>
+<![CDATA[$$$]]></Result>
 <Parameters/>
 </O>
 <PrivilegeControl/>
 <CellGUIAttr adjustmode="0"/>
 <CellPageAttr/>
+<CellInsertPolicy>
+<InsertPolicy>
+<![CDATA[copy]]></InsertPolicy>
+</CellInsertPolicy>
 <Expand dir="1"/>
 </C>
 <C c="4" r="2" s="2">
@@ -990,6 +983,20 @@ from CXMES.GIQS_REVIEW where sitecode = '${sitecode}' and id= ${reviewid}]]></Qu
 <![CDATA[=seq()]]></Attributes>
 </O>
 <PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[$$$%2=0]]></Formula>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.BackgroundHighlightAction">
+<Scope val="1"/>
+<Background name="ColorBackground" color="-4855833"/>
+</HighlightAction>
+</Highlight>
+</HighlightList>
 <Expand dir="0" leftParentDefault="false" left="B2" upParentDefault="false"/>
 </C>
 <C c="1" r="1" cs="3" s="1">
