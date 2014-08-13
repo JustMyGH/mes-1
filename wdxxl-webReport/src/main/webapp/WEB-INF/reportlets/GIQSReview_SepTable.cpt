@@ -1,0 +1,1156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WorkBook xmlVersion="20140501" releaseVersion="7.1.0">
+<TableDataMap>
+<TableData name="CrossTab_IC_RC_(IQS)" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="sitecode"/>
+<O>
+<![CDATA[1310]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="reviewid"/>
+<O>
+<![CDATA[52]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select title, categoryNAme,IC1Name,IC2Name, IC2Code, sum(score * count_score) as sumscore
+from (
+select '责任分数合计' as title,
+	RC.categoryNAme as categoryNAme,
+	s.score as score,
+	ic1.CATEGORYNAME as IC1Name,
+	ic2.CATEGORYNAME as IC2Name,
+	ic2.CATEGORYCode as IC2Code,
+	(select count(*) from giqs_reviewItem where reviewId = ${reviewid}
+	and (secondscore = s.score)
+	and itemcategorycode = ic2.CATEGORYCODE and responsibilitycategorycode=RC.CATEGORYCODE
+	)  +
+	(select count(*) from giqs_reviewItem where reviewId = ${reviewid}
+	and (newscore = s.score)
+	and itemcategorycode = ic2.CATEGORYCODE and responsibilitycategorycode=RC.CATEGORYCODE
+	) as count_score 
+from 
+	GIQS_RESPONSIBILITYCATEGORY RC,
+	giqs_score s,
+	giqs_itemcategory ic1 INNER JOIN CXMES.GIQS_ITEMCATEGORY ic2 ON ic1.categoryCode = ic2.parentCategoryCode 
+where (ic1.CATEGORYNAME = 'IQS'　or ic1.CATEGORYNAME = '保安防灾')
+	and RC.sitecode = '${sitecode}' and RC.lockflag = 0 
+	and s.sitecode = '${sitecode}' and s.lockflag = 0 
+	and ic1.sitecode = '${sitecode}' AND ic1.lockflag = 0
+	AND ic2.sitecode = '${sitecode}' AND ic2.lockflag = 0
+	and IC1.NODETYPE = 1 and IC2.NODETYPE = 2  
+)
+group by title, categoryNAme,IC1Name,IC2Name, IC2Code
+order by ic2code asc,categoryNAme asc
+]]></Query>
+</TableData>
+<TableData name="CrossTab_IC_RC_S_(IQS)" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="sitecode"/>
+<O>
+<![CDATA[1310]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="reviewid"/>
+<O>
+<![CDATA[52]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select '责任区分问题数',
+	RC.categoryNAme,
+	s.score ,
+	ic1.CATEGORYNAME as IC1Name,
+	ic1.SCOREFLAG as IC1ScoreFlag,
+	ic2.CATEGORYNAME as IC2Name,
+	ic2.CATEGORYCode as IC2Code,
+	(select count(*) from giqs_reviewItem where reviewId = ${reviewid}
+	and (secondscore = s.score)
+	and itemcategorycode = ic2.CATEGORYCODE and responsibilitycategorycode=RC.CATEGORYCODE
+	)  +
+	(select count(*) from giqs_reviewItem where reviewId = ${reviewid}
+	and (newscore = s.score)
+	and itemcategorycode = ic2.CATEGORYCODE and responsibilitycategorycode=RC.CATEGORYCODE
+	) as count_score 
+from 
+	GIQS_RESPONSIBILITYCATEGORY RC,
+	giqs_score s,
+	giqs_itemcategory ic1 INNER JOIN CXMES.GIQS_ITEMCATEGORY ic2 ON ic1.categoryCode = ic2.parentCategoryCode 
+where (ic1.CATEGORYNAME = 'IQS' or ic1.CATEGORYNAME = '保安防灾')
+	and RC.sitecode = '${sitecode}' and RC.lockflag = 0 and s.sitecode = '${sitecode}' and s.lockflag = 0 
+	and ic1.sitecode = '${sitecode}' AND ic1.lockflag = 0
+	AND ic2.sitecode = '${sitecode}' AND ic2.lockflag = 0
+	and IC1.NODETYPE = 1 and IC2.NODETYPE = 2  
+order by ic2code asc, categoryname asc, score desc]]></Query>
+</TableData>
+<TableData name="CrossTab_IC_S_(IQS)" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="sitecode"/>
+<O>
+<![CDATA[1310]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="reviewid"/>
+<O>
+<![CDATA[52]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select '分数区分问题数',
+	s.score ,
+	ic1.CATEGORYNAME as IC1Name,
+	ic1.SCOREFLAG as IC1ScoreFlag,
+	ic2.CATEGORYNAME as IC2Name,
+	ic2.CATEGORYCode as IC2Code,
+	(select count(*) from giqs_reviewItem where reviewId = ${reviewid}
+	and (secondscore = s.score)
+	and itemcategorycode = ic2.CATEGORYCODE
+	)  +
+	(select count(*) from giqs_reviewItem where reviewId = ${reviewid}
+	and (newscore = s.score)
+	and itemcategorycode = ic2.CATEGORYCODE
+	) as count_score 
+from 
+	giqs_score s,
+	giqs_itemcategory ic1 INNER JOIN CXMES.GIQS_ITEMCATEGORY ic2 ON ic1.categoryCode = ic2.parentCategoryCode 
+where  (ic1.CATEGORYNAME = 'IQS' or ic1.CATEGORYNAME = '保安防灾')
+	and s.sitecode = '${sitecode}' and s.lockflag = 0 
+	and ic1.sitecode = '${sitecode}' AND ic1.lockflag = 0
+	AND ic2.sitecode = '${sitecode}' AND ic2.lockflag = 0
+	and IC1.NODETYPE = 1 and IC2.NODETYPE = 2  
+order by ic2code asc,score desc]]></Query>
+</TableData>
+<TableData name="GIQS_Review" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="sitecode"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="reviewid"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select 
+       item,
+       place,
+       weather,
+       reviewer,
+       cartype,
+       vin,
+       eng,
+       tc,
+       crttime,
+       iqsscore,
+       securityscore
+from CXMES.GIQS_REVIEW where sitecode = '${sitecode}' and id= ${reviewid}]]></Query>
+</TableData>
+<TableData name="GIQS_ReviewItem_(IQS)" class="com.fr.data.impl.DBTableData">
+<Parameters>
+<Parameter>
+<Attributes name="sitecode"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+<Parameter>
+<Attributes name="reviewid"/>
+<O>
+<![CDATA[]]></O>
+</Parameter>
+</Parameters>
+<Attributes maxMemRowCount="-1"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+<Query>
+<![CDATA[select failuremodecode,
+       areacode,
+       responsibilitycategorycode,
+       itemcategorycode,
+       firstscore,
+       secondscore,
+       newscore
+  from CXMES.GIQS_REVIEWITEM
+ where sitecode = '${sitecode}' and reviewid = ${reviewid}
+ 	and itemcategorycode in (
+ 	select distinct ic2.categorycode from giqs_itemcategory ic2 
+ 	where ic2.parentcategorycode in 
+	(select distinct ic1.categorycode from giqs_itemcategory ic1 where
+		ic1.CATEGORYNAME = 'IQS' or ic1.CATEGORYNAME = '保安防灾'))]]></Query>
+</TableData>
+</TableDataMap>
+<Report class="com.fr.report.poly.PolyWorkSheet" name="sheet2">
+<ReportAttrSet>
+<ReportSettings headerHeight="0" footerHeight="0">
+<PaperSetting/>
+</ReportSettings>
+<Header reportPageType="0">
+<Background name="NullBackground"/>
+<LeftList/>
+<CenterList/>
+<RightList/>
+</Header>
+</ReportAttrSet>
+<Block class="com.fr.report.poly.PolyECBlock">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[723900,723900,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[1600200,2743200,1219200,1676400,2743200,1828800,2743200,1905000,2743200,2743200,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" cs="11" s="0">
+<O>
+<![CDATA[GIQS 整车评价记录表]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="1" s="1">
+<O>
+<![CDATA[项目]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="1" cs="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="ITEM"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="3" r="1" s="1">
+<O>
+<![CDATA[地点]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="PLACE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="5" r="1" s="1">
+<O>
+<![CDATA[天气]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="WEATHER"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="7" r="1" s="1">
+<O>
+<![CDATA[T/C]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="TC"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="9" r="1" s="1">
+<O>
+<![CDATA[评价人员]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="REVIEWER"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="0" r="2" s="1">
+<O>
+<![CDATA[车型]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="2" cs="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="CARTYPE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="3" r="2" s="1">
+<O>
+<![CDATA[VIN]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="4" r="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="VIN"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="5" r="2" s="1">
+<O>
+<![CDATA[ENG]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="ENG"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false"/>
+</C>
+<C c="7" r="2" s="1">
+<O>
+<![CDATA[时间]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="2" cs="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_Review" columnName="CRTTIME"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false"/>
+</C>
+<C c="0" r="3" cs="3" s="1">
+<O>
+<![CDATA[IQS得分]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="3" cs="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="SUMSCORE"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[IC1NAME]]></CNAME>
+<Compare op="0">
+<O>
+<![CDATA[IQS]]></O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.SummaryGrouper">
+<FN>
+<![CDATA[com.fr.data.util.function.SumFunction]]></FN>
+</RG>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="0">
+<O>
+<![CDATA[0]]></O>
+</Compare>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand/>
+</C>
+<C c="6" r="3" s="1">
+<O>
+<![CDATA[保防得分]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="3" cs="4" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="SUMSCORE"/>
+<Condition class="com.fr.data.condition.CommonCondition">
+<CNAME>
+<![CDATA[IC1NAME]]></CNAME>
+<Compare op="0">
+<O>
+<![CDATA[保安防灾]]></O>
+</Compare>
+</Condition>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.SummaryGrouper">
+<FN>
+<![CDATA[com.fr.data.util.function.SumFunction]]></FN>
+</RG>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="0">
+<O>
+<![CDATA[0]]></O>
+</Compare>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand/>
+</C>
+</CellElementList>
+<PECBAttr blockName="block1" x="0" y="0" width="24688800" height="2895600"/>
+</Block>
+<Block class="com.fr.report.poly.PolyECBlock">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[723900,723900,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[952500,1600200,762000,838200,0,0,0,914400,0,0,0,1066800,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" cs="3" rs="3" s="1">
+<O>
+<![CDATA[类别]]></O>
+<PrivilegeControl/>
+<Expand upParentDefault="false"/>
+</C>
+<C c="3" r="0" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_S_(IQS)" columnName="&apos;责任区分问题数&apos;"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<CellGUIAttr adjustmode="0"/>
+<CellPageAttr/>
+<Expand dir="1"/>
+</C>
+<C c="4" r="0" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="0" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="0" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="0" cs="5" s="1">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_S_(IQS)" columnName="CATEGORYNAME"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<CellGUIAttr adjustmode="0"/>
+<CellPageAttr/>
+<Expand dir="1"/>
+</C>
+<C c="4" r="1" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="1" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="1" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_S_(IQS)" columnName="&apos;分数区分问题数&apos;"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="1"/>
+</C>
+<C c="8" r="1" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="1" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="1" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="TITLE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="1"/>
+</C>
+<C c="3" r="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_S_(IQS)" columnName="SCORE"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<CellGUIAttr adjustmode="0"/>
+<CellPageAttr/>
+<CellInsertPolicy>
+<InsertPolicy>
+<![CDATA[copy]]></InsertPolicy>
+</CellInsertPolicy>
+<Expand dir="1"/>
+</C>
+<C c="4" r="2" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="5" r="2" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="6" r="2" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_S_(IQS)" columnName="SCORE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="1"/>
+</C>
+<C c="8" r="2" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="2" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="10" r="2" s="2">
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="11" r="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="CATEGORYNAME"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="1"/>
+</C>
+<C c="0" r="3" rs="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_S_(IQS)" columnName="IC1NAME"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="1" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_S_(IQS)" columnName="IC2NAME"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="2" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_S_(IQS)" columnName="IC2CODE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="3" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_S_(IQS)" columnName="COUNT_SCORE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="0">
+<O>
+<![CDATA[0]]></O>
+</Compare>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand/>
+</C>
+<C c="4" r="3" rs="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_S_(IQS)" columnName="IC1NAME"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" upParentDefault="false"/>
+</C>
+<C c="5" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_S_(IQS)" columnName="IC2NAME"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="E4"/>
+</C>
+<C c="6" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_S_(IQS)" columnName="IC2CODE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="7" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_S_(IQS)" columnName="COUNT_SCORE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<CellPageAttr/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="0">
+<O>
+<![CDATA[0]]></O>
+</Compare>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<CellInsertPolicy/>
+<Expand/>
+</C>
+<C c="8" r="3" rs="2" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="IC1NAME"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" upParentDefault="false"/>
+</C>
+<C c="9" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="IC2NAME"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0" leftParentDefault="false" left="I4"/>
+</C>
+<C c="10" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="IC2CODE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="11" r="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="SUMSCORE"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="0">
+<O>
+<![CDATA[0]]></O>
+</Compare>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand/>
+</C>
+<C c="1" r="4" cs="2" s="1">
+<O>
+<![CDATA[问题总数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="3" r="4" s="1">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=sum(D4)]]></Attributes>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="0">
+<O>
+<![CDATA[0]]></O>
+</Compare>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand leftParentDefault="false" left="B5"/>
+</C>
+<C c="5" r="4" cs="2" s="1">
+<O>
+<![CDATA[问题总数]]></O>
+<PrivilegeControl/>
+<Expand leftParentDefault="false" left="E4"/>
+</C>
+<C c="7" r="4" s="1">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=sum(H4)]]></Attributes>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="0">
+<O>
+<![CDATA[0]]></O>
+</Compare>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand leftParentDefault="false" left="F5"/>
+</C>
+<C c="9" r="4" cs="2" s="1">
+<O>
+<![CDATA[问题总数]]></O>
+<PrivilegeControl/>
+<Expand leftParentDefault="false" left="I4"/>
+</C>
+<C c="11" r="4" s="1">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=sum(L4)]]></Attributes>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.ObjectCondition">
+<Compare op="0">
+<O>
+<![CDATA[0]]></O>
+</Compare>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.ValueHighlightAction">
+<O>
+<![CDATA[]]></O>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand leftParentDefault="false" left="J5"/>
+</C>
+</CellElementList>
+<PECBAttr blockName="block2" x="0" y="2895600" width="6134100" height="3619500"/>
+</Block>
+<Block class="com.fr.report.poly.PolyECBlock">
+<ReportPageAttr>
+<HR/>
+<FR/>
+<HC/>
+<FC/>
+</ReportPageAttr>
+<ColumnPrivilegeControl/>
+<RowPrivilegeControl/>
+<RowHeight defaultValue="723900">
+<![CDATA[723900,723900,723900,723900,723900,723900,723900,723900,723900,723900,723900]]></RowHeight>
+<ColumnWidth defaultValue="2743200">
+<![CDATA[1295400,2743200,2743200,2743200,2324100,2743200,2743200,2209800,2590800,2552700,2743200]]></ColumnWidth>
+<CellElementList>
+<C c="0" r="0" s="1">
+<O>
+<![CDATA[序号]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="1" r="0" cs="3" s="1">
+<O>
+<![CDATA[失效模式]]></O>
+<PrivilegeControl/>
+<Expand upParentDefault="false"/>
+</C>
+<C c="4" r="0" s="1">
+<O>
+<![CDATA[区域]]></O>
+<PrivilegeControl/>
+<Expand upParentDefault="false"/>
+</C>
+<C c="5" r="0" s="1">
+<O>
+<![CDATA[责任]]></O>
+<PrivilegeControl/>
+<Expand leftParentDefault="false" upParentDefault="false"/>
+</C>
+<C c="6" r="0" s="1">
+<O>
+<![CDATA[类别]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="7" r="0" s="1">
+<O>
+<![CDATA[原始分数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="8" r="0" s="1">
+<O>
+<![CDATA[再发分数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="9" r="0" s="1">
+<O>
+<![CDATA[新增分数]]></O>
+<PrivilegeControl/>
+<Expand/>
+</C>
+<C c="0" r="1" s="1">
+<O t="Formula" class="Formula">
+<Attributes>
+<![CDATA[=seq()]]></Attributes>
+</O>
+<PrivilegeControl/>
+<HighlightList>
+<Highlight class="com.fr.report.cell.cellattr.highlight.DefaultHighlight">
+<Name>
+<![CDATA[条件属性1]]></Name>
+<Condition class="com.fr.data.condition.FormulaCondition">
+<Formula>
+<![CDATA[$$$%2=0]]></Formula>
+</Condition>
+<HighlightAction class="com.fr.report.cell.cellattr.highlight.BackgroundHighlightAction">
+<Scope val="1"/>
+<Background name="ColorBackground" color="-4855833"/>
+</HighlightAction>
+</Highlight>
+</HighlightList>
+<Expand dir="0" leftParentDefault="false" left="B2" upParentDefault="false"/>
+</C>
+<C c="1" r="1" cs="3" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_ReviewItem_(IQS)" columnName="FAILUREMODECODE"/>
+<Condition class="com.fr.data.condition.ListCondition"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper">
+<Attr divideMode="1"/>
+</RG>
+<Result>
+<![CDATA[$$$]]></Result>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Present class="com.fr.base.present.DictPresent">
+<Dictionary class="com.fr.data.impl.DatabaseDictionary">
+<FormulaDictAttr kiName="CATEGORYCODE" viName="CATEGORYNAME"/>
+<DBDictAttr tableName="GIQS_ITEMCATEGORY" schemaName="CXMES" ki="-1" vi="-1" kiName="CATEGORYCODE" viName="CATEGORYNAME"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+</Dictionary>
+</Present>
+<Expand dir="0"/>
+</C>
+<C c="4" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_ReviewItem_(IQS)" columnName="AREACODE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Present class="com.fr.base.present.DictPresent">
+<Dictionary class="com.fr.data.impl.DatabaseDictionary">
+<FormulaDictAttr kiName="AREACODE" viName="AREANAME"/>
+<DBDictAttr tableName="GIQS_AREA" schemaName="CXMES" ki="-1" vi="-1" kiName="AREACODE" viName="AREANAME"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+</Dictionary>
+</Present>
+<Expand dir="0"/>
+</C>
+<C c="5" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_ReviewItem_(IQS)" columnName="RESPONSIBILITYCATEGORYCODE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Present class="com.fr.base.present.DictPresent">
+<Dictionary class="com.fr.data.impl.DatabaseDictionary">
+<FormulaDictAttr kiName="CATEGORYCODE" viName="CATEGORYNAME"/>
+<DBDictAttr tableName="GIQS_RESPONSIBILITYCATEGORY" schemaName="CXMES" ki="-1" vi="-1" kiName="CATEGORYCODE" viName="CATEGORYNAME"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+</Dictionary>
+</Present>
+<Expand dir="0"/>
+</C>
+<C c="6" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_ReviewItem_(IQS)" columnName="ITEMCATEGORYCODE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Present class="com.fr.base.present.DictPresent">
+<Dictionary class="com.fr.data.impl.DatabaseDictionary">
+<FormulaDictAttr kiName="CATEGORYCODE" viName="CATEGORYNAME"/>
+<DBDictAttr tableName="GIQS_ITEMCATEGORY" schemaName="CXMES" ki="-1" vi="-1" kiName="CATEGORYCODE" viName="CATEGORYNAME"/>
+<Connection class="com.fr.data.impl.NameDatabaseConnection">
+<DatabaseName>
+<![CDATA[GeelyCXMes]]></DatabaseName>
+</Connection>
+</Dictionary>
+</Present>
+<Expand dir="0"/>
+</C>
+<C c="7" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_ReviewItem_(IQS)" columnName="FIRSTSCORE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="8" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_ReviewItem_(IQS)" columnName="SECONDSCORE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+<C c="9" r="1" s="1">
+<O t="DSColumn">
+<Attributes dsName="GIQS_ReviewItem_(IQS)" columnName="NEWSCORE"/>
+<Complex/>
+<RG class="com.fr.report.cell.cellattr.core.group.FunctionGrouper"/>
+<Parameters/>
+</O>
+<PrivilegeControl/>
+<Expand dir="0"/>
+</C>
+</CellElementList>
+<PECBAttr blockName="block4" x="0" y="6515100" width="24688800" height="1447800"/>
+</Block>
+<PrivilegeControl/>
+</Report>
+<ReportParameterAttr>
+<Attributes showWindow="true" delayPlaying="true" windowPosition="1" align="0"/>
+<PWTitle>
+<![CDATA[参数]]></PWTitle>
+</ReportParameterAttr>
+<StyleList>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="1" size="88"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border>
+<Top style="1"/>
+<Bottom style="1"/>
+<Left style="1"/>
+<Right style="1"/>
+</Border>
+</Style>
+<Style horizontal_alignment="0" imageLayout="1">
+<FRFont name="SimSun" style="0" size="72"/>
+<Background name="NullBackground"/>
+<Border/>
+</Style>
+</StyleList>
+<DesignerVersion DesignerVersion="HBA"/>
+<PreviewType PreviewType="0"/>
+</WorkBook>
