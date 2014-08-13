@@ -4,6 +4,7 @@
 		<module>../wdxxl-pp</module>
 		<module>../wdxxl-qm</module>
 		<module>../wdxxl-web</module>
+		<module>../wdxxl-webReport</module>
 		<module>../wdxxl-zUnitTest</module>
 	</modules>
 
