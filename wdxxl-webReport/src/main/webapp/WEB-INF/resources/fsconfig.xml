@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<fsconfig xmlVersion="20140501" releaseVersion="7.1.0" useFS="true" homePageURL="ReportServer?reportlet=demo/analytics/product.cpt" loginTitle="数据决策系统" isLoginPageImg="false" hasNavigation="true" mobiledevbind="false" style="lightblue" gradeAuthority="true" editReportAuthority="false" dataConnectionAuthority="false" controlType="0">
+<fsconfig xmlVersion="20140501" releaseVersion="7.1.0" useFS="true" homePageURL="http://www.finereport.com" loginTitle="数据决策系统" isLoginPageImg="false" hasNavigation="true" mobiledevbind="false" style="lightblue" gradeAuthority="true" editReportAuthority="false" dataConnectionAuthority="false" controlType="0">
 <hsqlControl hsqlSetting="{&quot;encrypt&quot;:0,&quot;myencrypt&quot;:&quot;&quot;}"/>
 <systemManagerFavoriteAndADHOCReport>
 <sysFavorite>

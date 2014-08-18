@@ -144,12 +144,12 @@ order by ic2code asc,score desc]]></Query>
 <Parameter>
 <Attributes name="sitecode"/>
 <O>
-<![CDATA[]]></O>
+<![CDATA[1310]]></O>
 </Parameter>
 <Parameter>
 <Attributes name="reviewid"/>
 <O>
-<![CDATA[]]></O>
+<![CDATA[52]]></O>
 </Parameter>
 </Parameters>
 <Attributes maxMemRowCount="-1"/>
@@ -177,12 +177,12 @@ from CXMES.GIQS_REVIEW where sitecode = '${sitecode}' and id= ${reviewid}]]></Qu
 <Parameter>
 <Attributes name="sitecode"/>
 <O>
-<![CDATA[]]></O>
+<![CDATA[1310]]></O>
 </Parameter>
 <Parameter>
 <Attributes name="reviewid"/>
 <O>
-<![CDATA[]]></O>
+<![CDATA[52]]></O>
 </Parameter>
 </Parameters>
 <Attributes maxMemRowCount="-1"/>
@@ -393,6 +393,8 @@ from CXMES.GIQS_REVIEW where sitecode = '${sitecode}' and id= ${reviewid}]]></Qu
 <O t="DSColumn">
 <Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="SUMSCORE"/>
 <Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
 <CNAME>
 <![CDATA[IC1NAME]]></CNAME>
 <Compare op="0">
@@ -438,6 +440,8 @@ from CXMES.GIQS_REVIEW where sitecode = '${sitecode}' and id= ${reviewid}]]></Qu
 <O t="DSColumn">
 <Attributes dsName="CrossTab_IC_RC_(IQS)" columnName="SUMSCORE"/>
 <Condition class="com.fr.data.condition.CommonCondition">
+<CNUMBER>
+<![CDATA[0]]></CNUMBER>
 <CNAME>
 <![CDATA[IC1NAME]]></CNAME>
 <Compare op="0">
